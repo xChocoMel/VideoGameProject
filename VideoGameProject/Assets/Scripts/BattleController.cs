@@ -21,6 +21,7 @@ public class BattleController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
         playerHP = 500;
         playerStrength = 100;
 
@@ -49,7 +50,7 @@ public class BattleController : MonoBehaviour {
         if (!gameEnd) {
             if (turn) {
                 turn = false;
-                txtTurn.text = "Enememies turn";
+                txtTurn.text = "Enemies turn";
                 btnFight.gameObject.SetActive(false);
                 StartCoroutine(EnemyFight());
             } else {
@@ -99,7 +100,6 @@ public class BattleController : MonoBehaviour {
         btnFight.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2.0f);
-
         SceneManager.LoadScene("Level01");
     }
 }
