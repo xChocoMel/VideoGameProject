@@ -3,15 +3,16 @@ using System.Collections;
 
 public class CameraMovement : MonoBehaviour {
 	private Vector3 offset;
-	public GameObject player;
+	public GameObject thePlayer;
 
 	// Use this for initialization
 	void Start () {
-		offset = transform.position - player.transform.position;
+		thePlayer = GameObject.Find ("Player");
+		offset = transform.position - thePlayer.transform.position;
 	}
 
 	// Update is called once per frame
 	void LateUpdate () {
-		transform.position = player.transform.position + offset;
+		transform.position = thePlayer.transform.position + offset;
 	}
 }

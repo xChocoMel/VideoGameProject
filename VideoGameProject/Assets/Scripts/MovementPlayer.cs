@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class MovementPlayer : MonoBehaviour {
 
 	public int speed;
-	private static bool sceneSwitched;
+	public static bool sceneSwitched;
 
 	private GameObject thePlayer;
 
@@ -48,8 +48,6 @@ public class MovementPlayer : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log ("Hello");
-
 		if (other.gameObject.CompareTag ("Coin")){
 			other.gameObject.SetActive (false);
 		}
