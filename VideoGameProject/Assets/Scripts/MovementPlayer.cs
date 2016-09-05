@@ -28,5 +28,13 @@ public class MovementPlayer : MonoBehaviour {
 			c.gameObject.SetActive (false);
 		}*/
 	}
+
+	void OnTriggerEnter(Collider other) {
+		Debug.Log ("Hello");
+
+		if (other.gameObject.CompareTag ("Coin")){
+			other.gameObject.SetActive (false);
+		}
+	}
 }
 	
