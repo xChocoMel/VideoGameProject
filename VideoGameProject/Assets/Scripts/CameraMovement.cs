@@ -7,12 +7,13 @@ public class CameraMovement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		DontDestroyOnLoad (this.gameObject);
 		thePlayer = GameObject.Find ("Player");
 		offset = transform.position - thePlayer.transform.position;
 	}
 
 	// Update is called once per frame
-	void LateUpdate () {
+	void FixedUpdate () {
 		transform.position = thePlayer.transform.position + offset;
 	}
 }

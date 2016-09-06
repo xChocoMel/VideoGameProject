@@ -14,6 +14,7 @@ public class MovementPlayer : MonoBehaviour {
 		thePlayer = GameObject.Find("Player");
 		if (sceneSwitched) {
 			PlayerComingBack ();
+
 		}
 	}
 	
