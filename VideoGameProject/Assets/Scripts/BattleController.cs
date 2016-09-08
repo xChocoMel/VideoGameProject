@@ -19,6 +19,8 @@ public class BattleController : MonoBehaviour {
     private Text txtPlayerHP;
     private Text txtEnemyHP;
 
+	public string sceneName1;
+
     // Use this for initialization
     void Start () {
 
@@ -87,7 +89,7 @@ public class BattleController : MonoBehaviour {
 
     private void ChechWin() {
         if (playerHP <= 0) {
-            txtTurn.text = "You loose";
+            txtTurn.text = "You lose";
             StartCoroutine(EndGame());
         } else if (enemyHP <= 0) {
             txtTurn.text = "You won";
@@ -100,6 +102,8 @@ public class BattleController : MonoBehaviour {
         btnFight.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2.0f);
-        SceneManager.LoadScene("Level01");
+		//public load scene for testing purpouse
+        SceneManager.LoadScene(sceneName1);
+
     }
 }

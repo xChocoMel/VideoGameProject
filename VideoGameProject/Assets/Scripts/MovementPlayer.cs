@@ -1,20 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MovementPlayer : MonoBehaviour {
 
 	public int speed;
+
+	private int counter;
+
 	public static bool sceneSwitched;
 
+	private GameObject[] numCoin;
 	private GameObject thePlayer;
+	public GameObject panel, panel2;
+
+	public Text coinText;
+	public Text winText;
 
 	// Use this for initialization
 	void Start () {
+		counter = 0;
+		winText.text = "";
+		numCoin = GameObject.FindGameObjectsWithTag ("Coin");
+		coinText.text = "Coins Collected: " + counter.ToString()+"/"+numCoin.Length;
 		thePlayer = GameObject.Find("Player");
 		if (sceneSwitched) {
 			PlayerComingBack ();
-
 		}
 	}
 	
@@ -33,6 +45,14 @@ public class MovementPlayer : MonoBehaviour {
 			PlayerSwitchingScene ();
 			SceneManager.LoadScene ("BattleScene");
 		}
+
+		else if (c.gameObject.name=="Goal") {
+			coinText.gameObject.SetActive (false);
+			panel.gameObject.SetActive (false);
+			panel2.gameObject.SetActive (true);
+
+			winText.text = "LEVEL CLEARED\n\nCOINS COLLECTED\n---\nRANK\nS";
+		}
 	}
 
 	void PlayerSwitchingScene () {
@@ -49,9 +69,12 @@ public class MovementPlayer : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (other.gameObject.CompareTag ("Coin")){
+		if (other.gameObject.CompareTag ("Coin")) {
 			other.gameObject.SetActive (false);
-		}
+			this.counter++;
+			coinText.text = "Coins Collected: " + counter.ToString () + "/" + numCoin.Length;
+		} 
 	}
+		
 }
 	
