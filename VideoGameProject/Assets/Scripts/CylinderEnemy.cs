@@ -4,8 +4,6 @@ using System.Collections;
 
 public class CylinderEnemy : MonoBehaviour {
 
-	private IEnumerator theCoroutine;
-
 	public GameObject originalProjectile;
 
 	void Start () {
@@ -13,10 +11,6 @@ public class CylinderEnemy : MonoBehaviour {
 		StartCoroutine (Shoot ());
 	}
 	void Update () { 
-		if(Input.GetKeyUp(KeyCode.S)){
-			//StopAllCoroutines ();
-			StopCoroutine(theCoroutine);
-		}
 	}
 
 	IEnumerator Shoot() {
