@@ -51,7 +51,7 @@ public class MovementPlayer : MonoBehaviour {
 			panel.gameObject.SetActive (false);
 			panel2.gameObject.SetActive (true);
 
-			winText.text = "LEVEL CLEARED\n\nCOINS COLLECTED\n---\nRANK\nS";
+			winText.text = "LEVEL CLEARED\n\nCOINS COLLECTED\n"+counter.ToString()+"/"+numCoin.Length+"\nRANK\nS";
 		}
 	}
 
