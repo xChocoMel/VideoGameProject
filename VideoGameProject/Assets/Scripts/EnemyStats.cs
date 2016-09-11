@@ -18,4 +18,11 @@ public class EnemyStats : MonoBehaviour {
 			this.gameObject.SetActive (false);
 		}
 	}
+
+	void OnTriggerEnter(Collider other) {
+		Debug.Log ("hey "+other.name);
+		if (other.tag == "Destroy") {
+			Destroy (this.gameObject);
+		}
+	}
 }
