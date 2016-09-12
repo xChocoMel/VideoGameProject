@@ -20,7 +20,7 @@ public class EnemyStats : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log ("hey "+other.name);
+		//Debug.Log ("hey "+other.name);
 		if (other.tag == "Destroy") {
 			Destroy (this.gameObject);
 		}

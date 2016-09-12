@@ -9,6 +9,7 @@ public class MovementPlayer : MonoBehaviour {
 
 	private int counter;
 
+
 	public static bool sceneSwitched;
 
 	private GameObject[] numCoin;
@@ -69,6 +70,7 @@ public class MovementPlayer : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
+		//When the player touch a coin it add one to the counter
 		if (other.gameObject.CompareTag ("Coin")) {
 			other.gameObject.SetActive (false);
 			this.counter++;
