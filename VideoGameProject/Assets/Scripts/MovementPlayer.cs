@@ -7,17 +7,11 @@ public class MovementPlayer : MonoBehaviour {
 
 	public float speed;
     public float rotateSpeed;
-
-    private int counter;
+	public string name;
 
 	public static bool sceneSwitched;
 
-	private GameObject[] numCoin;
 	private GameObject thePlayer;
-
-    private GameObject panel, panel2;
-    private Text coinText;
-    private Text winText;
 
     // Use this for initialization
     void Start() {
@@ -29,19 +23,8 @@ public class MovementPlayer : MonoBehaviour {
             rotateSpeed = 50f;
         }
 
-        counter = 0;
-        numCoin = GameObject.FindGameObjectsWithTag("Coin");
         thePlayer = GameObject.Find("Player");
 
-        panel = GameObject.Find("Panel1");
-        panel2 = GameObject.Find("Panel2");        
-
-        coinText = GameObject.Find("coinText").GetComponent<Text>();
-        coinText.text = "Coins Collected: " + counter.ToString() + "/" + numCoin.Length;
-
-        winText = GameObject.Find("winText").GetComponent<Text>();
-        winText.text = "";
-        panel2.SetActive(false);
 
         if (sceneSwitched) {
 			PlayerComingBack ();
@@ -73,14 +56,6 @@ public class MovementPlayer : MonoBehaviour {
 			PlayerSwitchingScene ();
 			SceneManager.LoadScene ("BattleScene");
 		}
-
-		else if (c.gameObject.name == "Goal") {
-			coinText.gameObject.SetActive (false);
-			panel.SetActive (false);
-			panel2.SetActive (true);
-
-			winText.text = "LEVEL CLEARED\n\nCOINS COLLECTED\n" + counter.ToString() + "/" + numCoin.Length + "\nRANK\nS";
-		}
 	}
 
 	void PlayerSwitchingScene () {
@@ -98,11 +73,27 @@ public class MovementPlayer : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		//When the player touch a coin it add one to the counter
-		if (other.gameObject.CompareTag ("Coin")) {
+		name=other.gameObject.tag;
+		switch (name)
+		{
+		case "Coin":
 			other.gameObject.SetActive (false);
-			this.counter++;
-			coinText.text = "Coins Collected: " + counter.ToString () + "/" + numCoin.Length;
-		} 
+			break;
+		case "Health":
+			other.gameObject.SetActive (false);
+			break;
+		case "Power":
+			other.gameObject.SetActive (false);
+			break;
+		case "Accuracy":
+			other.gameObject.SetActive (false);
+			break;
+		case "Defense":
+			other.gameObject.SetActive (false);
+			break;
+		default:
+			break;
+		}
 	}		
 }
 	
