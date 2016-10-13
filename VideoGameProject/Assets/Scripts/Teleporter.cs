@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Teleporter : MonoBehaviour {
 
-	public float movX,movY,movZ;
+	public float movX, movY, movZ;
 
 	// Use this for initialization
 	void Start () {

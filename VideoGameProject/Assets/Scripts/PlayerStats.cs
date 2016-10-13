@@ -1,18 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerStats : MonoBehaviour {
+public class PlayerStats {
 
-	public int playerHP;
-	public int playerStrength;
+    private static PlayerStats instance = null;
 
-	// Use this for initialization
-	void Start () {
-		PlayerPrefs.SetInt ("PlayerHP", playerHP);
-		PlayerPrefs.SetInt ("PlayerStrenght", playerStrength);
+	private int health;
+	private int strength;
+
+    public int Health {
+        get { return health; }
+        set { health = value; }
+    }
+
+    public int Strength {
+        get { return strength; }
+        set { strength = value; }
+    }
+
+    public static PlayerStats getInstance() {
+        if (instance == null) {
+            instance = new PlayerStats();
+        }
+
+        return instance;
+    }
+
+    private PlayerStats() {
+        reset();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
+
+    public void reset() {
+        Health = 500;
+        Strength = 100;
+    }
+
+    public void deleteInstance() {
+        instance = null;
+    }
 }

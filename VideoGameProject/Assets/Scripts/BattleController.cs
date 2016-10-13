@@ -5,41 +5,46 @@ using System.Collections;
 
 public class BattleController : MonoBehaviour {
 
-    private int playerHP;
-    private int enemyStrength;
+    private PlayerStats playerStats;
+    private Enemy enemy;
 
-    private int enemyHP;
+    private int playerHealth;
     private int playerStrength;
+
+    private int enemyHealth;
+    private int enemyStrength;
 
     private bool turn;
     private bool gameEnd;
 
     private Button btnFight;
     private Text txtTurn;
-    private Text txtPlayerHP;
-    private Text txtEnemyHP;
+    private Text txtPlayerHealth;
+    private Text txtEnemyHealth;
 
 	public string sceneName1;
 
     // Use this for initialization
     void Start () {
+        playerStats = PlayerStats.getInstance();
+        enemy = GameObject.Find("Enemy").GetComponent<Enemy>();
 
-        playerHP = 500;
-        playerStrength = 100;
+        playerHealth = playerStats.Health;
+        playerStrength = playerStats.Strength;
 
-        enemyHP = 200;
-        enemyStrength = 50;
+        enemyHealth = enemy.Health;
+        enemyStrength = enemy.Strength;
         
         turn = true;
         gameEnd = false;
 
         btnFight = GameObject.Find("btnFight").GetComponent<Button>();
         txtTurn = GameObject.Find("txtTurn").GetComponent<Text>();
-        txtPlayerHP = GameObject.Find("txtPlayerHP").GetComponent<Text>();
-        txtEnemyHP = GameObject.Find("txtEnemyHP").GetComponent<Text>();
+        txtPlayerHealth = GameObject.Find("txtPlayerHP").GetComponent<Text>();
+        txtEnemyHealth = GameObject.Find("txtEnemyHP").GetComponent<Text>();
 
-        txtPlayerHP.text = "Player HP: " + playerHP;
-        txtEnemyHP.text = "Enemy HP: " + enemyHP;
+        txtPlayerHealth.text = "Player Health: " + playerHealth;
+        txtEnemyHealth.text = "Enemy Health: " + enemyHealth;
     }
 	
 	// Update is called once per frame
@@ -64,34 +69,34 @@ public class BattleController : MonoBehaviour {
     }
 
     public void Fight() {
-        enemyHP -= playerStrength;
+        enemyHealth -= playerStrength;
 
-        if (enemyHP < 0) {
-            enemyHP = 0;
+        if (enemyHealth < 0) {
+            enemyHealth = 0;
         }
 
-        txtEnemyHP.text = "Enemy HP: " + enemyHP;
+        txtEnemyHealth.text = "Enemy Health: " + enemyHealth;
         SwitchTurns();
     }
 
     IEnumerator EnemyFight() {
         yield return new WaitForSeconds(2.0f);
 
-        playerHP -= enemyStrength;
+        playerHealth -= enemyStrength;
 
-        if (playerHP < 0) {
-            playerHP = 0;
+        if (playerHealth < 0) {
+            playerHealth = 0;
         }
 
-        txtPlayerHP.text = "Player HP: " + playerHP;
+        txtPlayerHealth.text = "Player Health: " + playerHealth;
         SwitchTurns();
     }
 
     private void ChechWin() {
-        if (playerHP <= 0) {
+        if (playerHealth <= 0) {
             txtTurn.text = "You lose";
             StartCoroutine(EndGame());
-        } else if (enemyHP <= 0) {
+        } else if (enemyHealth <= 0) {
             txtTurn.text = "You won";
             StartCoroutine(EndGame());
         }
@@ -101,8 +106,11 @@ public class BattleController : MonoBehaviour {
         gameEnd = true;
         btnFight.gameObject.SetActive(false);
 
+        playerStats.Health = playerHealth;
+        enemy.Health = enemyHealth;
+
         yield return new WaitForSeconds(2.0f);
-		//public load scene for testing purpouse
+		//public load scene for testing purpose
         SceneManager.LoadScene(sceneName1);
 
     }

@@ -18,8 +18,10 @@ public class EnemyPatrolling : MonoBehaviour {
 		transform.LookAt (this.checkpointsArr[this.currentCheckpoint]);
 		transform.Translate (transform.forward * Time.deltaTime * this.speed, Space.World);
 		float distance = Vector3.Distance (transform.position, this.checkpointsArr[this.currentCheckpoint].position);
-		if (distance < this.treshold) {
+
+        if (distance < this.treshold) {
 			this.currentCheckpoint++;
+
 			if (this.currentCheckpoint == this.checkpointsArr.Length) {
 				this.currentCheckpoint = 0;
 			}

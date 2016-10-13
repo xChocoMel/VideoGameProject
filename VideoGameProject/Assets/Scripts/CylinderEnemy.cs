@@ -7,7 +7,7 @@ public class CylinderEnemy : MonoBehaviour {
 	public GameObject originalProjectile;
 
 	void Start () {
-		DontDestroyOnLoad (this.gameObject);
+		DontDestroyOnLoad (gameObject);
 		StartCoroutine (Shoot ());
 	}
 	void Update () { 
@@ -15,7 +15,7 @@ public class CylinderEnemy : MonoBehaviour {
 
 	IEnumerator Shoot() {
 		while (true) {
-			Instantiate(originalProjectile,transform.position,Quaternion.identity);
+			Instantiate(originalProjectile, transform.position, Quaternion.identity);
 			yield return new WaitForSeconds (3);
 		}
 	}
