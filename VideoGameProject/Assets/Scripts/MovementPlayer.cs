@@ -7,7 +7,7 @@ public class MovementPlayer : MonoBehaviour {
 
 	public float speed;
     public float rotateSpeed;
-	public string name;
+	public string objectName;
 
 	public static bool sceneSwitched;
 
@@ -73,8 +73,7 @@ public class MovementPlayer : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		//When the player touch a coin it add one to the counter
-		name=other.gameObject.tag;
-		switch (name)
+		switch (other.gameObject.tag)
 		{
 		case "Coin":
 			other.gameObject.SetActive (false);
