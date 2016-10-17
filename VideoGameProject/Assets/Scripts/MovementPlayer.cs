@@ -7,11 +7,12 @@ public class MovementPlayer : MonoBehaviour {
 
 	public float speed;
     public float rotateSpeed;
-	public string objectName;
 
 	public static bool sceneSwitched;
 
 	private GameObject thePlayer;
+
+	public PlayerStats ps;
 
     // Use this for initialization
     void Start() {
@@ -49,8 +50,10 @@ public class MovementPlayer : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision c){
+		//Testing purpouses
 		Debug.Log("Entered Collision with: " + c.transform.name);
 
+		//Change to a fight scene if an enemy is touched
         if (c.gameObject.CompareTag ("Enemy")) {
 			sceneSwitched = true;
 			PlayerSwitchingScene ();
@@ -71,8 +74,8 @@ public class MovementPlayer : MonoBehaviour {
 		thePlayer.transform.position = new Vector3 (newPlayerX, newPlayerY, newPlayerZ);
 	}
 
+	//When an object is touched it modifies the counters
 	void OnTriggerEnter(Collider other) {
-		//When the player touch a coin it add one to the counter
 		switch (other.gameObject.tag)
 		{
 		case "Coin":
@@ -93,6 +96,6 @@ public class MovementPlayer : MonoBehaviour {
 		default:
 			break;
 		}
-	}		
+	}
 }
 	
