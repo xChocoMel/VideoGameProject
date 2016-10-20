@@ -41,7 +41,6 @@ public class MovementPlayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         CheckKeyInput();
-
 		if (Input.GetKeyUp (KeyCode.Q)) {
 			health.CurrentVal -= 10;
 		} else if (Input.GetKeyUp (KeyCode.E)) {
