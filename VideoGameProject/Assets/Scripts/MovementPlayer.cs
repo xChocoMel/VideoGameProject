@@ -12,10 +12,16 @@ public class MovementPlayer : MonoBehaviour {
 
 	private GameObject thePlayer;
 
-	public PlayerStats ps;
+	[SerializeField]
+	private PlayerStats health;
+
+	private void Awake(){
+		health.Initialize ();
+	}
 
     // Use this for initialization
     void Start() {
+
         if (speed <= 0) {
             speed = 5f;
         }
@@ -35,6 +41,12 @@ public class MovementPlayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         CheckKeyInput();
+
+		if (Input.GetKeyUp (KeyCode.Q)) {
+			health.CurrentVal -= 10;
+		} else if (Input.GetKeyUp (KeyCode.E)) {
+			health.CurrentVal += 10;
+		}
     }
 
     private void CheckKeyInput() {
@@ -97,5 +109,6 @@ public class MovementPlayer : MonoBehaviour {
 			break;
 		}
 	}
+
 }
 	
