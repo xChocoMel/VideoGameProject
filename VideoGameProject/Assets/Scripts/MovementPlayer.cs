@@ -10,16 +10,17 @@ public class MovementPlayer : MonoBehaviour {
     public float speed;
     public float rotateSpeed;
 
-    private int counter;
-
 	public static bool sceneSwitched;
 
     private GameObject[] numCoin;
 	private GameObject thePlayer;
 
-    private GameObject panel, panel2;
-    private Text coinText;
-    private Text winText;
+	[SerializeField]
+	private PlayerStats health;
+
+	private void Awake(){
+		health.Initialize ();
+	}
 
     // Use this for initialization
     void Start() {
@@ -28,19 +29,7 @@ public class MovementPlayer : MonoBehaviour {
         if (speed <= 0) { speed = 5f; }
         if (rotateSpeed <= 0) {  rotateSpeed = 50f; }
 
-        counter = 0;
-        numCoin = GameObject.FindGameObjectsWithTag("Coin");
         thePlayer = GameObject.Find("Player");
-
-        panel = GameObject.Find("Panel1");
-        panel2 = GameObject.Find("Panel2");        
-
-        coinText = GameObject.Find("coinText").GetComponent<Text>();
-        coinText.text = "Coins Collected: " + counter.ToString() + "/" + numCoin.Length;
-
-        winText = GameObject.Find("winText").GetComponent<Text>();
-        winText.text = "";
-        panel2.SetActive(false);
 
         if (sceneSwitched) {
 			PlayerComingBack ();
@@ -50,6 +39,11 @@ public class MovementPlayer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         CheckKeyInput();
+		if (Input.GetKeyUp (KeyCode.Q)) {
+			health.CurrentVal -= 10;
+		} else if (Input.GetKeyUp (KeyCode.E)) {
+			health.CurrentVal += 10;
+		}
     }
 
     private void CheckKeyInput() {
@@ -65,10 +59,10 @@ public class MovementPlayer : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision c){
+		//Testing purpouses
 		Debug.Log("Entered Collision with: " + c.transform.name);
-        Enemy[] enemies = FindObjectsOfType<Enemy>();
-        Debug.Log(enemies.Length);
 
+		//Change to a fight scene if an enemy is touched
         if (c.gameObject.CompareTag ("Enemy")) {
             Debug.Log("ENEMY COLLISON");
 
@@ -76,13 +70,7 @@ public class MovementPlayer : MonoBehaviour {
             Destroy(c.gameObject);
             PlayerSwitchingScene();
             SceneManager.LoadScene("BattleScene");
-        } else if (c.gameObject.name == "Goal") {
-			coinText.gameObject.SetActive (false);
-			panel.SetActive (false);
-			panel2.SetActive (true);
-
-			winText.text = "LEVEL CLEARED\n\nCOINS COLLECTED\n" + counter.ToString() + "/" + numCoin.Length + "\nRANK\nS";
-		}
+        }
 	}
 
 	void PlayerSwitchingScene () {
@@ -95,13 +83,28 @@ public class MovementPlayer : MonoBehaviour {
         sceneSwitched = false;
 	}
 
+	//When an object is touched it modifies the counters
 	void OnTriggerEnter(Collider other) {
-		//When the player touch a coin it add one to the counter
-		if (other.gameObject.CompareTag ("Coin")) {
+		switch (other.gameObject.tag)
+		{
+		case "Coin":
 			other.gameObject.SetActive (false);
-			this.counter++;
-			coinText.text = "Coins Collected: " + counter.ToString () + "/" + numCoin.Length;
-		} 
-	}	
+			break;
+		case "Health":
+			other.gameObject.SetActive (false);
+			break;
+		case "Power":
+			other.gameObject.SetActive (false);
+			break;
+		case "Accuracy":
+			other.gameObject.SetActive (false);
+			break;
+		case "Defense":
+			other.gameObject.SetActive (false);
+			break;
+		default:
+			break;
+		}
+	}
 }
 	
