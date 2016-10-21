@@ -1,50 +1,65 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 using System.Collections;
 
 public class BattleController : MonoBehaviour {
 
-    private PlayerStats playerStats;
+    private PlayerStats player;
     private Enemy enemy;
-
-    private int playerHealth;
-    private int playerStrength;
-
-    private int enemyHealth;
-    private int enemyStrength;
 
     private bool turn;
     private bool gameEnd;
 
-    private Button btnFight;
+    private GameObject buttonPanel;
     private Text txtTurn;
     private Text txtPlayerHealth;
     private Text txtEnemyHealth;
+    private Text txtPlayerTurn;
+    private Text txtEnemyTurn;
 
-	public string sceneName1;
+    public string sceneName1;
+
+    public EnemyWeak enemyWeak;
+    public EnemyNormal enemyNormal;
+    public EnemyStrong enemyStrong;
 
     // Use this for initialization
     void Start () {
-        playerStats = PlayerStats.getInstance();
-        enemy = GameObject.Find("Enemy").GetComponent<Enemy>();
+        player = PlayerStats.getInstance();
 
-        playerHealth = playerStats.Health;
-        playerStrength = playerStats.Strength;
+        Enemy encountered = player.EncounteredEnemy;
+        Vector3 pos = new Vector3(5, 0, -7.5f);
+        Vector3 rot = new Vector3(0, 270, 0);
 
-        enemyHealth = enemy.Health;
-        enemyStrength = enemy.Strength;
-        
+        //enemy = (Enemy)Instantiate(player.EncounteredEnemy, pos, Quaternion.Euler(rot));
+
+        if (encountered.GetType() == typeof(EnemyWeak)) {
+            Debug.Log("Enemy Weak encoutered");
+            enemy = (EnemyWeak)Instantiate(enemyWeak, pos, Quaternion.Euler(rot));
+        } else if (encountered.GetType() == typeof(EnemyNormal)) {
+            Debug.Log("Enemy Normal encoutered");
+            enemy = (EnemyNormal)Instantiate(enemyNormal, pos, Quaternion.Euler(rot));
+        } else if (encountered.GetType() == typeof(EnemyStrong)) {
+            Debug.Log("Enemy Strong encoutered");
+            enemy = (EnemyStrong)Instantiate(enemyStrong, pos, Quaternion.Euler(rot));
+        }
+
         turn = true;
         gameEnd = false;
 
-        btnFight = GameObject.Find("btnFight").GetComponent<Button>();
+        buttonPanel = GameObject.Find("Panel");
         txtTurn = GameObject.Find("txtTurn").GetComponent<Text>();
         txtPlayerHealth = GameObject.Find("txtPlayerHP").GetComponent<Text>();
         txtEnemyHealth = GameObject.Find("txtEnemyHP").GetComponent<Text>();
+        txtPlayerTurn = GameObject.Find("txtPlayerTurn").GetComponent<Text>();
+        txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
 
-        txtPlayerHealth.text = "Player Health: " + playerHealth;
-        txtEnemyHealth.text = "Enemy Health: " + enemyHealth;
+        txtPlayerHealth.text = "Player Health: " + player.Health;
+        txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
+        txtPlayerTurn.text = "";
+        txtEnemyTurn.text = "";
     }
 	
 	// Update is called once per frame
@@ -58,45 +73,101 @@ public class BattleController : MonoBehaviour {
             if (turn) {
                 turn = false;
                 txtTurn.text = "Enemies turn";
-                btnFight.gameObject.SetActive(false);
+                buttonPanel.gameObject.SetActive(false);
                 StartCoroutine(EnemyFight());
             } else {
                 turn = true;
                 txtTurn.text = "Your turn";
-                btnFight.gameObject.SetActive(true);
+                buttonPanel.gameObject.SetActive(true);
             }
         }
     }
 
-    public void Fight() {
-        enemyHealth -= playerStrength;
+    public void Attack() {
+        int damage = player.Strength;
 
-        if (enemyHealth < 0) {
-            enemyHealth = 0;
+        if (enemy.Defending) {
+            damage -= enemy.Defence;
+            damage = Math.Max(0, damage);
+            enemy.Defending = false;
         }
 
-        txtEnemyHealth.text = "Enemy Health: " + enemyHealth;
+        enemy.Health -= damage;
+        enemy.Health = Math.Max(0, enemy.Health);
+        txtPlayerTurn.text = "Damage: " + damage;
+        txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
+        SwitchTurns();
+    }
+
+    public void Defend() {
+        player.Defending = true;
+        txtPlayerTurn.text = "Defence activated";
+        SwitchTurns();
+    }
+
+    public void SpecialAttack() {
+        int damage = 0;
+        int r = UnityEngine.Random.Range(0, 5);
+
+        if (r == 0) {
+            damage = player.Strength * 2;
+
+            if (enemy.Defending) {
+                damage -= enemy.Defence;
+                damage = Math.Max(0, damage);
+                enemy.Defending = false;
+            }
+
+            enemy.Health -= damage;
+            enemy.Health = Math.Max(0, enemy.Health);
+            txtEnemyHealth.text = "Enemy Health: " + enemy.Health;            
+        }
+
+        if (damage > 0) {
+            txtPlayerTurn.text = "Special attack succeeded\nDamage: " + damage;
+        } else {
+            txtPlayerTurn.text = "Special attack failed";
+        }
+
         SwitchTurns();
     }
 
     IEnumerator EnemyFight() {
         yield return new WaitForSeconds(2.0f);
 
-        playerHealth -= enemyStrength;
+        int damage = enemy.Fight();
+        bool special = false;
 
-        if (playerHealth < 0) {
-            playerHealth = 0;
+        if (damage > enemy.Strength) {
+            special = true;
         }
 
-        txtPlayerHealth.text = "Player Health: " + playerHealth;
+        if (player.Defending) {
+            damage -= player.Defence;
+            damage = Math.Max(0, damage);
+            player.Defending = false;
+        }
+
+        player.Health -= damage;
+        player.Health = Math.Max(0, player.Health);
+
+        if (damage > 0) {
+            if (special) {
+                txtEnemyTurn.text = "Special attack\nDamage: " + damage;
+            } else {
+                txtEnemyTurn.text = "Damage: " + damage;
+            }
+        }
+
+        txtPlayerHealth.text = "Player Health: " + player.Health;
         SwitchTurns();
     }
 
     private void ChechWin() {
-        if (playerHealth <= 0) {
+        if (player.Health <= 0) {
             txtTurn.text = "You lose";
             StartCoroutine(EndGame());
-        } else if (enemyHealth <= 0) {
+        } else if (enemy.Health <= 0) {
             txtTurn.text = "You won";
             StartCoroutine(EndGame());
         }
@@ -104,14 +175,14 @@ public class BattleController : MonoBehaviour {
 
     IEnumerator EndGame() {
         gameEnd = true;
-        btnFight.gameObject.SetActive(false);
+        buttonPanel.gameObject.SetActive(false);
 
-        playerStats.Health = playerHealth;
-        enemy.Health = enemyHealth;
+        player.Health = player.Health;
+        enemy.Health = enemy.Health;
+        player.EncounteredEnemy = null;
 
         yield return new WaitForSeconds(2.0f);
 		//public load scene for testing purpose
         SceneManager.LoadScene(sceneName1);
-
     }
 }

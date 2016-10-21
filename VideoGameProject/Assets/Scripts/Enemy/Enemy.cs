@@ -3,8 +3,10 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour {
 
-    private int health;
-    private int strength;
+    protected int health;
+    protected int strength;
+    protected int defence;
+    protected bool defending;
 
     public int Health {
         get { return health; }
@@ -16,15 +18,27 @@ public class Enemy : MonoBehaviour {
         set { strength = value; }
     }
 
+    public int Defence {
+        get { return defence; }
+        set { defence = value; }
+    }
+
+    public bool Defending {
+        get { return defending; }
+        set { defending = value; }
+    }
+
     // Use this for initialization
-    void Start () {
-	
-	}
+    void Start () { }
 	
 	// Update is called once per frame
 	void Update () {
         if (health <= 0) {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
+
+    //Return damage
+    //If defending, damage = 0
+    public virtual int Fight() { return 0; }
 }

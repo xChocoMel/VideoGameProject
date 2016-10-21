@@ -1,24 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System;
 
 public class EnemyNormal : Enemy {
 
-    // Use this for initialization
-    void Start () {
+    private Text txtEnemyTurn;
+
+    void Awake() {
         Health = 200;
         Strength = 50;
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
+        Defence = 25;
+        Defending = false;
     }
 
-    private void attack() {
+    // Use this for initialization
+    void Start() { }
 
+    // Update is called once per frame
+    void Update () { }
+    
+    public override int Fight() {
+        if (txtEnemyTurn == null) {
+            try {
+                txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
+                txtEnemyTurn.text = "";
+            } catch (Exception ex) { }
+        }
+
+        int damage = 0;
+        int r = UnityEngine.Random.Range(0, 2);
+
+        if (r == 0) {
+            Defend();
+            txtEnemyTurn.text = "Defence activated";
+        } else {
+            damage = Attack();
+        }
+
+        return damage;
     }
 
-    private void defend() {
+    private int Attack() {
+        return Strength;
+    }
 
+    private void Defend() {
+        Defending = true;
     }
 }

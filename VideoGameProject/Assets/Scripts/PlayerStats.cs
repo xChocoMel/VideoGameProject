@@ -5,8 +5,18 @@ public class PlayerStats {
 
     private static PlayerStats instance = null;
 
+    private Vector3 position;
 	private int health;
 	private int strength;
+    protected int defence;
+    protected bool defending;
+
+    private static Enemy encounteredEnemy;
+
+    public Vector3 Position {
+        get { return position; }
+        set { position = value; }
+    }
 
     public int Health {
         get { return health; }
@@ -16,6 +26,21 @@ public class PlayerStats {
     public int Strength {
         get { return strength; }
         set { strength = value; }
+    }
+
+    public int Defence {
+        get { return defence; }
+        set { defence = value; }
+    }
+
+    public bool Defending {
+        get { return defending; }
+        set { defending = value; }
+    }
+
+    public Enemy EncounteredEnemy {
+        get { return encounteredEnemy; }
+        set { encounteredEnemy = value; }
     }
 
     public static PlayerStats getInstance() {

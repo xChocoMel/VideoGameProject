@@ -5,14 +5,16 @@ using UnityEngine.UI;
 
 public class MovementPlayer : MonoBehaviour {
 
-	public float speed;
+    private PlayerStats playerStats;
+
+    public float speed;
     public float rotateSpeed;
 
     private int counter;
 
 	public static bool sceneSwitched;
 
-	private GameObject[] numCoin;
+    private GameObject[] numCoin;
 	private GameObject thePlayer;
 
     private GameObject panel, panel2;
@@ -21,13 +23,10 @@ public class MovementPlayer : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        if (speed <= 0) {
-            speed = 5f;
-        }
+        playerStats = PlayerStats.getInstance();
 
-        if (rotateSpeed <= 0) { 
-            rotateSpeed = 50f;
-        }
+        if (speed <= 0) { speed = 5f; }
+        if (rotateSpeed <= 0) {  rotateSpeed = 50f; }
 
         counter = 0;
         numCoin = GameObject.FindGameObjectsWithTag("Coin");
@@ -67,14 +66,17 @@ public class MovementPlayer : MonoBehaviour {
 
     void OnCollisionEnter(Collision c){
 		Debug.Log("Entered Collision with: " + c.transform.name);
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        Debug.Log(enemies.Length);
 
         if (c.gameObject.CompareTag ("Enemy")) {
-			sceneSwitched = true;
-			PlayerSwitchingScene ();
-			SceneManager.LoadScene ("BattleScene");
-		}
+            Debug.Log("ENEMY COLLISON");
 
-		else if (c.gameObject.name == "Goal") {
+            playerStats.EncounteredEnemy = c.gameObject.GetComponent<Enemy>();
+            Destroy(c.gameObject);
+            PlayerSwitchingScene();
+            SceneManager.LoadScene("BattleScene");
+        } else if (c.gameObject.name == "Goal") {
 			coinText.gameObject.SetActive (false);
 			panel.SetActive (false);
 			panel2.SetActive (true);
@@ -84,16 +86,13 @@ public class MovementPlayer : MonoBehaviour {
 	}
 
 	void PlayerSwitchingScene () {
-		PlayerPrefs.SetFloat ("PlayerX", thePlayer.transform.position.x);
-		PlayerPrefs.SetFloat ("PlayerY", thePlayer.transform.position.y);
-		PlayerPrefs.SetFloat ("PlayerZ", thePlayer.transform.position.z);
-	}
+        playerStats.Position = thePlayer.transform.position;
+        sceneSwitched = true;
+    }
 
 	void PlayerComingBack () {
-		float newPlayerX = PlayerPrefs.GetFloat ("PlayerX");
-		float newPlayerY = PlayerPrefs.GetFloat ("PlayerY");
-		float newPlayerZ = PlayerPrefs.GetFloat ("PlayerZ");
-		thePlayer.transform.position = new Vector3 (newPlayerX, newPlayerY, newPlayerZ);
+		thePlayer.transform.position = playerStats.Position;        
+        sceneSwitched = false;
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -103,6 +102,6 @@ public class MovementPlayer : MonoBehaviour {
 			this.counter++;
 			coinText.text = "Coins Collected: " + counter.ToString () + "/" + numCoin.Length;
 		} 
-	}		
+	}	
 }
 	
