@@ -117,6 +117,7 @@ public class MovementPlayer : MonoBehaviour {
 			break;
 		}
 		handleObjects ();
+		other.gameObject.SetActive (false);
 		Debug.Log(playerStats.ObStrength+" "+playerStats.ObHealth+" "+playerStats.ObDefense+" "+playerStats.ObAccuracy);
 	}
 }
