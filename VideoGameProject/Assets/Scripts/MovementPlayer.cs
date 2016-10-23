@@ -14,10 +14,19 @@ public class MovementPlayer : MonoBehaviour {
 
     private GameObject[] numCoin;
 	private GameObject thePlayer;
+	private Text objectText;
 
     // Use this for initialization
     void Start() {
         playerStats = PlayerStats.getInstance();
+
+		objectText= GameObject.Find("ObjectText").GetComponent<Text>();
+
+		objectText.text =  
+			"Accuracy: "+playerStats.ObAccuracy+
+			"\nStrength: "+playerStats.ObStrength+
+			"\nDefense: "+playerStats.ObDefense+
+			"\nHealth: "+playerStats.ObHealth;
 
         if (speed <= 0) { speed = 5f; }
         if (rotateSpeed <= 0) {  rotateSpeed = 50f; }
@@ -71,6 +80,16 @@ public class MovementPlayer : MonoBehaviour {
         sceneSwitched = false;
 	}
 
+	void handleObjects(){
+		objectText.text =  
+			"Accuracy: "+playerStats.ObAccuracy+
+			"\nStrength: "+playerStats.ObStrength+
+			"\nDefense: "+playerStats.ObDefense+
+			"\nHealth: "+playerStats.ObHealth;
+	}
+
+
+
 	//When an object is touched it modifies the counters
 	void OnTriggerEnter(Collider other) {
 		switch (other.gameObject.tag)
@@ -97,6 +116,7 @@ public class MovementPlayer : MonoBehaviour {
 		default:
 			break;
 		}
+		handleObjects ();
 		Debug.Log(playerStats.ObStrength+" "+playerStats.ObHealth+" "+playerStats.ObDefense+" "+playerStats.ObAccuracy);
 	}
 }

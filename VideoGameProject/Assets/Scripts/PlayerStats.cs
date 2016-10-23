@@ -93,6 +93,7 @@ public class PlayerStats {
     public void reset() {
         Health = 500;
         Strength = 100;
+		Defence = 100;
     }
 
     public void deleteInstance() {
