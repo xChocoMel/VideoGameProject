@@ -20,6 +20,7 @@ public class BattleController : MonoBehaviour {
     private Text txtPlayerTurn;
     private Text txtEnemyTurn;
 	private Text txtObject;
+	private Text txtNumber;
 
     public string sceneName1;
 
@@ -59,12 +60,15 @@ public class BattleController : MonoBehaviour {
         txtPlayerTurn = GameObject.Find("txtPlayerTurn").GetComponent<Text>();
         txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
 		txtObject = GameObject.Find ("txtObject").GetComponent<Text> ();
+		txtNumber = GameObject.Find ("txtNumber").GetComponent<Text> ();
 
         txtPlayerHealth.text = "Player Health: " + player.Health;
         txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
         txtPlayerTurn.text = "";
         txtEnemyTurn.text = "";
 		txtObject.text = " ";
+		//lazy way
+		txtNumber.text = player.ObStrength+"                                       "+player.ObDefense+"                                     "+player.ObAccuracy+"                                     "+player.ObHealth;
 
     }
 	
@@ -133,7 +137,7 @@ public class BattleController : MonoBehaviour {
 			player.ObStrength -= 1;
 			SwitchTurns ();
 		} else {
-			txtObject.text = "There is no Strenght objects left";
+			txtObject.text = "There is no Strength objects left";
 		}
 
 		StartCoroutine (ChangeText());
@@ -141,7 +145,7 @@ public class BattleController : MonoBehaviour {
 		
 	public void UseAccuracy(){
 		if (player.ObAccuracy > 0) {
-			txtObject.text = "Accuracy raised to ";
+			txtObject.text = "Accuracy raised 20%";
 			player.ObAccuracy -= 1;
 			SwitchTurns ();
 		} else {
@@ -193,6 +197,8 @@ public class BattleController : MonoBehaviour {
     }
 
 	IEnumerator ChangeText(){
+		//lazy way
+		txtNumber.text = player.ObStrength+"                                       "+player.ObDefense+"                                     "+player.ObAccuracy+"                                     "+player.ObHealth;
 		yield return new WaitForSeconds(1.0f);
 		txtObject.text = "";
 	}
