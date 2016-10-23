@@ -13,12 +13,45 @@ public class PlayerStats {
     protected int defence;
     protected bool defending;
 
+	//-------------1
+	private int obAccuracy,
+	obHealth,
+	obDefense,
+	obStrength;
+	//-------------1
+
+	int ad;
+
     private static Enemy encounteredEnemy;
 
     public Vector3 Position {
         get { return position; }
         set { position = value; }
 	}
+
+	//------------------2
+
+	public int ObAccuracy {
+		get { return obAccuracy; }
+		set { obAccuracy = value; }
+	}
+
+	public int ObDefense {
+		get { return obDefense; }
+		set { obDefense = value; }
+	}
+
+	public int ObStrength {
+		get { return obStrength; }
+		set { obStrength = value; }
+	}
+
+	public int ObHealth {
+		get { return obHealth; }
+		set { obHealth = value; }
+	}
+
+	//-------------------2
 
     public int Health {
         get { return health; }

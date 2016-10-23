@@ -60,6 +60,7 @@ public class BattleController : MonoBehaviour {
         txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
         txtPlayerTurn.text = "";
         txtEnemyTurn.text = "";
+
     }
 	
 	// Update is called once per frame
@@ -104,6 +105,19 @@ public class BattleController : MonoBehaviour {
         txtPlayerTurn.text = "Defence activated";
         SwitchTurns();
     }
+
+	//This function is used when the health button in the battle scene is clicked
+	public void UseHealth(){
+		Debug.Log ("health object: "+player.ObHealth);
+		if (player.ObHealth > 0) {
+			player.Health += 100;
+			player.ObHealth -= 1;
+		} else {
+			Debug.Log ("There is no Health objects left");
+		}
+
+		Debug.Log ("health object left: "+player.ObHealth);
+	}
 
     public void SpecialAttack() {
         int damage = 0;

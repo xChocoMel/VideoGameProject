@@ -80,19 +80,24 @@ public class MovementPlayer : MonoBehaviour {
 			break;
 		case "Health":
 			other.gameObject.SetActive (false);
+			playerStats.ObHealth += 1;
 			break;
 		case "Power":
 			other.gameObject.SetActive (false);
+			playerStats.ObStrength += 1;
 			break;
 		case "Accuracy":
 			other.gameObject.SetActive (false);
+			playerStats.ObAccuracy += 1;
 			break;
 		case "Defense":
 			other.gameObject.SetActive (false);
+			playerStats.ObDefense += 1;
 			break;
 		default:
 			break;
 		}
+		Debug.Log(playerStats.ObStrength+" "+playerStats.ObHealth+" "+playerStats.ObDefense+" "+playerStats.ObAccuracy);
 	}
 }
 	
