@@ -1,8 +1,30 @@
 ﻿using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
-using System.Collections;
+
+public class DeathScene : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+
+	public void ChangeScene(){
+		SceneManager.LoadScene ("Level01");
+
+	}
+}
+
+
+/*
+ * 
+
 
 public class BattleController : MonoBehaviour {
 
@@ -235,8 +257,7 @@ public class BattleController : MonoBehaviour {
 
     private void ChechWin() {
         if (player.Health <= 0) {
-			SceneManager.LoadScene("Death");
-			txtTurn.text = "You lose";
+            txtTurn.text = "You lose";
             StartCoroutine(EndGame());
         } else if (enemy.Health <= 0) {
             txtTurn.text = "You won";
@@ -257,7 +278,8 @@ public class BattleController : MonoBehaviour {
 
         yield return new WaitForSeconds(2.0f);
 		//public load scene for testing purpose
-		SceneManager.LoadScene(sceneName1);
-
+        SceneManager.LoadScene(sceneName1);
     }
 }
+
+*/
