@@ -25,7 +25,9 @@ public class EnemyStrong : Enemy {
             try {
                 txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
                 txtEnemyTurn.text = "";
-            } catch (Exception ex) { }
+            } catch (Exception ex) { 
+				Debug.Log (ex);
+			}
         }
 
         int damage = 0;
