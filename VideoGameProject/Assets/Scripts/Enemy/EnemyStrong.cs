@@ -5,8 +5,6 @@ using System;
 
 public class EnemyStrong : Enemy {
 
-    private Text txtEnemyTurn;
-
     void Awake() {
         Health = 500;
         Strength = 150;
@@ -21,24 +19,13 @@ public class EnemyStrong : Enemy {
     void Update () { }
     
     public override int Fight() {
-        if (txtEnemyTurn == null) {
-            try {
-                txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
-                txtEnemyTurn.text = "";
-            } catch (Exception ex) { 
-				Debug.Log (ex);
-			}
-        }
-
         int damage = 0;
         int r = UnityEngine.Random.Range(0, 9);
 
         if (r == 9) {
             damage = SpecialAttack();
-            txtEnemyTurn.text = "Special attack succeeded\nDamage: " + damage;
         } else if (r >= 0 && r <= 2) {
             Defend();
-            txtEnemyTurn.text = "Defence activated";
         } else {
             damage = Attack();
         }

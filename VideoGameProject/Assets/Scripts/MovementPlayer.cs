@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MovementPlayer : MonoBehaviour {
 
     private PlayerStats playerStats;
+    private Animator playerAnimator;
 
     public float speed;
 	public float rotateSpeed;
@@ -17,17 +18,21 @@ public class MovementPlayer : MonoBehaviour {
 	private GameObject thePlayer;
 	private Text objectText;
 
+    private AudioSource audioSource;
+    public AudioClip collectableClip;
+
     // Use this for initialization
     void Start() {
         playerStats = PlayerStats.getInstance();
+        playerAnimator = GetComponent<Animator>();
+        audioSource = GetComponentInChildren<AudioSource>();
 
-		objectText= GameObject.Find("ObjectText").GetComponent<Text>();
-
+        objectText = GameObject.Find("ObjectText").GetComponent<Text>();
 		objectText.text =  
-			"Accuracy: "+playerStats.ObAccuracy+
-			"\nStrength: "+playerStats.ObStrength+
-			"\nDefense: "+playerStats.ObDefense+
-			"\nHealth: "+playerStats.ObHealth;
+			"Accuracy: " + playerStats.ObAccuracy +
+			"\nStrength: " + playerStats.ObStrength +
+			"\nDefense: " + playerStats.ObDefense +
+			"\nHealth: " + playerStats.ObHealth;
 
         if (speed <= 0) { speed = 5f; }
         if (rotateSpeed <= 0) {  rotateSpeed = 50f; }
@@ -41,7 +46,7 @@ public class MovementPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		CheckKeyInput ();
+        CheckKeyInput ();
     }
 
     private void CheckKeyInput() {
@@ -54,6 +59,8 @@ public class MovementPlayer : MonoBehaviour {
         //Option 2: Vertical > rotation
         transform.Translate(0, 0, v * speed * Time.deltaTime);
         transform.Rotate(0, h * rotateSpeed * Time.deltaTime, 0);
+
+        playerAnimator.SetFloat("Speed", v);
     }
 
     void OnCollisionEnter(Collision c){
@@ -83,45 +90,46 @@ public class MovementPlayer : MonoBehaviour {
 
 	void handleObjects(){
 		objectText.text =  
-			"Accuracy: "+playerStats.ObAccuracy+
-			"\nStrength: "+playerStats.ObStrength+
-			"\nDefense: "+playerStats.ObDefense+
-			"\nHealth: "+playerStats.ObHealth;
+			"Accuracy: " + playerStats.ObAccuracy +
+			"\nStrength: " + playerStats.ObStrength +
+			"\nDefense: " + playerStats.ObDefense +
+			"\nHealth: " + playerStats.ObHealth;
 	}
-
-
 
 	//When an object is touched it modifies the counters
 	void OnTriggerEnter(Collider other) {
 		switch (other.gameObject.tag)
 		{
-		case "Finish":
-			//SceneManager.LoadScene (levelToLoad);
-			break;
-		case "Health":
-			other.gameObject.SetActive (false);
-			playerStats.ObHealth += 1;
-			break;
-		case "Power":
-			other.gameObject.SetActive (false);
-			playerStats.ObStrength += 1;
-			break;
-		case "Accuracy":
-			other.gameObject.SetActive (false);
-			playerStats.ObAccuracy += 1;
-			break;
-		case "Defense":
-			other.gameObject.SetActive (false);
-			playerStats.ObDefense += 1;
-			break;
-		default:
-			break;
+		    case "Coin":
+			    other.gameObject.SetActive (false);
+			    break;
+		    case "Health":
+			    other.gameObject.SetActive (false);
+                audioSource.PlayOneShot(collectableClip);
+                playerStats.ObHealth += 1;
+			    break;
+		    case "Power":
+			    other.gameObject.SetActive (false);
+                audioSource.PlayOneShot(collectableClip);
+                playerStats.ObStrength += 1;
+			    break;
+		    case "Accuracy":
+			    other.gameObject.SetActive (false);
+                audioSource.PlayOneShot(collectableClip);
+                playerStats.ObAccuracy += 1;
+			    break;
+		    case "Defense":
+			    other.gameObject.SetActive (false);
+                audioSource.PlayOneShot(collectableClip);
+                playerStats.ObDefense += 1;
+			    break;
+		    default:
+			    break;
 		}
-		handleObjects ();
 
-		//Debugging purpouses only.
-		//other.gameObject.SetActive (false);
-		//Debug.Log(playerStats.ObStrength+" "+playerStats.ObHealth+" "+playerStats.ObDefense+" "+playerStats.ObAccuracy);
+		handleObjects ();
+		other.gameObject.SetActive (false);
+		Debug.Log(playerStats.ObStrength + " " + playerStats.ObHealth + " " + playerStats.ObDefense + " " + playerStats.ObAccuracy);
 	}
 }
 	

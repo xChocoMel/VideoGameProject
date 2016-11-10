@@ -6,8 +6,11 @@ using System.Collections;
 
 public class BattleController : MonoBehaviour {
 
-    private PlayerStats player;
+    private PlayerStats player;    
     private Enemy enemy;
+
+    private Animator playerAnimator;
+    private Animator enemyAnimator;
 
     private bool turn;
     private bool gameEnd;
@@ -19,14 +22,23 @@ public class BattleController : MonoBehaviour {
     private Text txtEnemyHealth;
     private Text txtPlayerTurn;
     private Text txtEnemyTurn;
-	private Text txtObject;
-	private Text txtNumber;
+    private Text txtObAccuracy;
+    private Text txtObStrength;
+    private Text txtObDefense;
+    private Text txtObHealth;
 
     public string sceneName1;
 
     public EnemyWeak enemyWeak;
     public EnemyNormal enemyNormal;
     public EnemyStrong enemyStrong;
+
+    private ParticleSystem psPlayerAttack;
+    private ParticleSystem psPlayerDefense;
+    private ParticleSystem psPlayerSpecial;
+    private ParticleSystem psEnemyAttack;
+    private ParticleSystem psEnemyDefense;
+    private ParticleSystem psEnemySpecial;
 
     // Use this for initialization
     void Start () {
@@ -49,9 +61,20 @@ public class BattleController : MonoBehaviour {
             enemy = (EnemyStrong)Instantiate(enemyStrong, pos, Quaternion.Euler(rot));
         }
 
+        playerAnimator = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
+        enemyAnimator = enemy.GetComponent<Animator>();
+
+        psPlayerAttack = GameObject.Find("psPlayerAttack").GetComponent<ParticleSystem>();
+        psPlayerDefense = GameObject.Find("psPlayerDefense").GetComponent<ParticleSystem>();
+        psPlayerSpecial = GameObject.Find("psPlayerSpecial").GetComponent<ParticleSystem>();
+        psEnemyAttack = GameObject.Find("psEnemyAttack").GetComponent<ParticleSystem>();
+        psEnemyDefense = GameObject.Find("psEnemyDefense").GetComponent<ParticleSystem>();
+        psEnemySpecial = GameObject.Find("psEnemySpecial").GetComponent<ParticleSystem>();
+
         turn = true;
         gameEnd = false;
 
+        //UI
         buttonPanel = GameObject.Find("Panel");
 		objectPanel = GameObject.Find ("ObjectPanel");
         txtTurn = GameObject.Find("txtTurn").GetComponent<Text>();
@@ -59,17 +82,19 @@ public class BattleController : MonoBehaviour {
         txtEnemyHealth = GameObject.Find("txtEnemyHP").GetComponent<Text>();
         txtPlayerTurn = GameObject.Find("txtPlayerTurn").GetComponent<Text>();
         txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
-		txtObject = GameObject.Find ("txtObject").GetComponent<Text> ();
-		txtNumber = GameObject.Find ("txtNumber").GetComponent<Text> ();
+        txtObAccuracy = GameObject.Find("ButtonAcc").GetComponentInChildren<Text>();
+        txtObStrength = GameObject.Find("ButtonStr").GetComponentInChildren<Text>();
+        txtObDefense = GameObject.Find("ButtonDef").GetComponentInChildren<Text>();
+        txtObHealth = GameObject.Find("ButtonHp").GetComponentInChildren<Text>();
 
         txtPlayerHealth.text = "Player Health: " + player.Health;
         txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
         txtPlayerTurn.text = "";
         txtEnemyTurn.text = "";
-		txtObject.text = " ";
-		//lazy way
-		txtNumber.text = player.ObStrength+"                                       "+player.ObDefense+"                                     "+player.ObAccuracy+"                                     "+player.ObHealth;
-
+        txtObAccuracy.text = "Accuracy: " + player.ObAccuracy;
+        txtObStrength.text = "Strength: " + player.ObStrength;
+        txtObDefense.text = "Defence: " + player.ObDefense;
+        txtObHealth.text = "Health: " + player.ObHealth;
     }
 	
 	// Update is called once per frame
@@ -78,6 +103,7 @@ public class BattleController : MonoBehaviour {
 
     private void SwitchTurns() {
         ChechWin();
+
         if (!gameEnd) {
             if (turn) {
                 turn = false;
@@ -107,67 +133,19 @@ public class BattleController : MonoBehaviour {
         enemy.Health = Math.Max(0, enemy.Health);
         txtPlayerTurn.text = "Damage: " + damage;
         txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
+
+        psPlayerAttack.Play();
+        StartCoroutine(AnimatePlayerAttack());
+
         SwitchTurns();
     }
 
     public void Defend() {
         player.Defending = true;
+        psPlayerDefense.Play();
         txtPlayerTurn.text = "Defence activated";
         SwitchTurns();
     }
-
-	//----This functions are used when the button in the battle scene is clicked----
-	public void UseHealth(){
-		if (player.ObHealth > 0) {
-			txtObject.text = "HEALTH + 100";
-			player.Health += 100;
-			txtPlayerHealth.text = "Player Health: " + player.Health;
-			player.ObHealth -= 1;
-			SwitchTurns ();
-		} else {
-			txtObject.text = "There is no Health objects left";
-		}
-
-		StartCoroutine (ChangeText());
-	}
-		
-	public void UseStrength(){
-		if (player.ObStrength > 0) {
-			txtObject.text = "Strength rasised to " + player.Strength;
-			player.ObStrength -= 1;
-			SwitchTurns ();
-		} else {
-			txtObject.text = "There is no Strength objects left";
-		}
-
-		StartCoroutine (ChangeText());
-	}
-		
-	public void UseAccuracy(){
-		if (player.ObAccuracy > 0) {
-			txtObject.text = "Accuracy raised 20%";
-			player.ObAccuracy -= 1;
-			SwitchTurns ();
-		} else {
-			txtObject.text = "There is no Accuracy objects left";
-		}
-
-		StartCoroutine (ChangeText());
-	}
-
-	public void UseDefense(){
-		if (player.ObDefense > 0) {
-			player.Defence += 50;
-			txtObject.text = "Defense raised to " + player.Defence;
-			player.ObDefense -= 1;
-			SwitchTurns ();
-		} else {
-			txtObject.text = "There is no Defense objects left";
-		}
-
-		StartCoroutine (ChangeText());
-	}
-	//---------------------------------------------------------------
 
     public void SpecialAttack() {
         int damage = 0;
@@ -189,6 +167,8 @@ public class BattleController : MonoBehaviour {
 
         if (damage > 0) {
             txtPlayerTurn.text = "Special attack succeeded\nDamage: " + damage;
+            psPlayerSpecial.Play();
+            StartCoroutine(AnimatePlayerAttack());
         } else {
             txtPlayerTurn.text = "Special attack failed";
         }
@@ -196,15 +176,9 @@ public class BattleController : MonoBehaviour {
         SwitchTurns();
     }
 
-	IEnumerator ChangeText(){
-		//lazy way
-		txtNumber.text = player.ObStrength+"                                       "+player.ObDefense+"                                     "+player.ObAccuracy+"                                     "+player.ObHealth;
-		yield return new WaitForSeconds(1.0f);
-		txtObject.text = "";
-	}
-
     IEnumerator EnemyFight() {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
+
         int damage = enemy.Fight();
         bool special = false;
 
@@ -221,25 +195,130 @@ public class BattleController : MonoBehaviour {
         player.Health -= damage;
         player.Health = Math.Max(0, player.Health);
 
-        if (damage > 0) {
+        if (enemy.Defending) {
+            psEnemyDefense.Play();
+            txtEnemyTurn.text = "Defence activated";
+        }
+
+        if (damage >= 0) {
+            if (damage > 0) {
+                StartCoroutine(AnimatePlayerDamage());
+            }
+
             if (special) {
+                psEnemySpecial.Play();
                 txtEnemyTurn.text = "Special attack\nDamage: " + damage;
             } else {
+                psEnemyAttack.Play();
                 txtEnemyTurn.text = "Damage: " + damage;
             }
         }
 
         txtPlayerHealth.text = "Player Health: " + player.Health;
+        yield return new WaitForSeconds(1.0f);
+
         SwitchTurns();
+    }
+
+    IEnumerator AnimatePlayerAttack() {
+        playerAnimator.SetBool("Attack", true);
+        yield return new WaitForSeconds(1.33f);
+        playerAnimator.SetBool("Attack", false);
+    }
+
+    IEnumerator AnimatePlayerDamage() {
+        yield return new WaitForSeconds(1.0f);
+        playerAnimator.SetBool("Damage", true);
+        yield return new WaitForSeconds(1.0f);
+        playerAnimator.SetBool("Damage", false);
+    }
+
+    IEnumerator AnimateEnemyDamage() {
+        yield return new WaitForSeconds(1.0f);
+        enemyAnimator.SetBool("Death", true);
+    }
+
+    IEnumerator AnimateEnemySpecialAttack() {        
+        yield return new WaitForSeconds(1.0f);
+        
+    }
+
+    IEnumerator AnimateEnemyDead() {
+        yield return new WaitForSeconds(1.0f);
+        enemyAnimator.SetBool("Death", true);
+    }
+
+    //----This functions are used when the button in the battle scene is clicked----
+    public void UseHealth() {
+        if (player.ObHealth > 0) {
+            txtPlayerTurn.text = "HEALTH + 100";
+            player.Health += 100;
+            txtPlayerHealth.text = "Player Health: " + player.Health;
+            player.ObHealth -= 1;
+            SwitchTurns();
+        } else {
+            txtPlayerTurn.text = "No Health objects left";
+        }
+
+        StartCoroutine(ChangeText());
+    }
+
+    public void UseStrength() {
+        if (player.ObStrength > 0) {
+            txtPlayerTurn.text = "Strength rasised to " + player.Strength;
+            player.ObStrength -= 1;
+            SwitchTurns();
+        } else {
+            txtPlayerTurn.text = "No Strength objects left";
+        }
+
+        StartCoroutine(ChangeText());
+    }
+
+    public void UseAccuracy() {
+        if (player.ObAccuracy > 0) {
+            txtPlayerTurn.text = "Accuracy raised 20%";
+            player.ObAccuracy -= 1;
+            SwitchTurns();
+        } else {
+            txtPlayerTurn.text = "No Accuracy objects left";
+        }
+
+        StartCoroutine(ChangeText());
+    }
+
+    public void UseDefense() {
+        if (player.ObDefense > 0) {
+            player.Defence += 50;
+            txtPlayerTurn.text = "Defense raised to " + player.Defence;
+            player.ObDefense -= 1;
+            SwitchTurns();
+        } else {
+            txtPlayerTurn.text = "No Defense objects left";
+        }
+
+        StartCoroutine(ChangeText());
+    }
+    //---------------------------------------------------------------
+
+    IEnumerator ChangeText() {
+        txtObAccuracy.text = "Accuracy: " + player.ObAccuracy;
+        txtObStrength.text = "Strength: " + player.ObStrength;
+        txtObDefense.text = "Defence: " + player.ObDefense;
+        txtObHealth.text = "Health: " + player.ObHealth;
+
+        yield return new WaitForSeconds(1.0f);
     }
 
     private void ChechWin() {
         if (player.Health <= 0) {
 			SceneManager.LoadScene("Death");
 			txtTurn.text = "You lose";
+            StartCoroutine(AnimatePlayerDamage());
             StartCoroutine(EndGame());
         } else if (enemy.Health <= 0) {
             txtTurn.text = "You won";
+            StartCoroutine(AnimateEnemyDead());
             StartCoroutine(EndGame());
         }
     }
