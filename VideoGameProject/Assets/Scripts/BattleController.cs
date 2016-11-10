@@ -12,6 +12,13 @@ public class BattleController : MonoBehaviour {
     private Animator playerAnimator;
     private Animator enemyAnimator;
 
+    private AudioSource playerAudio;    
+    private AudioSource enemyAudio;
+
+    public AudioClip attackClip;
+    public AudioClip defenseClip;
+    public AudioClip specialClip;
+
     private bool turn;
     private bool gameEnd;
 
@@ -62,7 +69,9 @@ public class BattleController : MonoBehaviour {
         }
 
         playerAnimator = GameObject.FindGameObjectWithTag("Player").GetComponent<Animator>();
+        playerAudio = GameObject.FindGameObjectWithTag("Player").GetComponent<AudioSource>();
         enemyAnimator = enemy.GetComponent<Animator>();
+        enemyAudio = enemy.GetComponent<AudioSource>();
 
         psPlayerAttack = GameObject.Find("psPlayerAttack").GetComponent<ParticleSystem>();
         psPlayerDefense = GameObject.Find("psPlayerDefense").GetComponent<ParticleSystem>();
@@ -135,6 +144,7 @@ public class BattleController : MonoBehaviour {
         txtEnemyHealth.text = "Enemy Health: " + enemy.Health;
 
         psPlayerAttack.Play();
+        playerAudio.PlayOneShot(attackClip);
         StartCoroutine(AnimatePlayerAttack());
 
         SwitchTurns();
@@ -143,6 +153,7 @@ public class BattleController : MonoBehaviour {
     public void Defend() {
         player.Defending = true;
         psPlayerDefense.Play();
+        playerAudio.PlayOneShot(defenseClip);
         txtPlayerTurn.text = "Defence activated";
         SwitchTurns();
     }
@@ -168,6 +179,7 @@ public class BattleController : MonoBehaviour {
         if (damage > 0) {
             txtPlayerTurn.text = "Special attack succeeded\nDamage: " + damage;
             psPlayerSpecial.Play();
+            playerAudio.PlayOneShot(specialClip);
             StartCoroutine(AnimatePlayerAttack());
         } else {
             txtPlayerTurn.text = "Special attack failed";
@@ -177,7 +189,7 @@ public class BattleController : MonoBehaviour {
     }
 
     IEnumerator EnemyFight() {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
 
         int damage = enemy.Fight();
         bool special = false;
@@ -197,19 +209,20 @@ public class BattleController : MonoBehaviour {
 
         if (enemy.Defending) {
             psEnemyDefense.Play();
+            enemyAudio.PlayOneShot(defenseClip);
             txtEnemyTurn.text = "Defence activated";
-        }
-
-        if (damage >= 0) {
+        } else if (damage >= 0) {
             if (damage > 0) {
                 StartCoroutine(AnimatePlayerDamage());
             }
 
             if (special) {
                 psEnemySpecial.Play();
+                enemyAudio.PlayOneShot(specialClip);
                 txtEnemyTurn.text = "Special attack\nDamage: " + damage;
             } else {
                 psEnemyAttack.Play();
+                enemyAudio.PlayOneShot(attackClip);
                 txtEnemyTurn.text = "Damage: " + damage;
             }
         }
