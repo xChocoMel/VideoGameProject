@@ -5,8 +5,6 @@ using System;
 
 public class EnemyNormal : Enemy {
 
-    private Text txtEnemyTurn;
-
     void Awake() {
         Health = 200;
         Strength = 50;
@@ -21,19 +19,11 @@ public class EnemyNormal : Enemy {
     void Update () { }
     
     public override int Fight() {
-        if (txtEnemyTurn == null) {
-            try {
-                txtEnemyTurn = GameObject.Find("txtEnemyTurn").GetComponent<Text>();
-                txtEnemyTurn.text = "";
-            } catch (Exception ex) { }
-        }
-
         int damage = 0;
         int r = UnityEngine.Random.Range(0, 2);
 
         if (r == 0) {
-            Defend();
-            txtEnemyTurn.text = "Defence activated";
+            Defend();            
         } else {
             damage = Attack();
         }

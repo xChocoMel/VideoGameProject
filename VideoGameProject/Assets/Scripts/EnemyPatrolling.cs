@@ -8,10 +8,14 @@ public class EnemyPatrolling : MonoBehaviour {
 	public float treshold;
 	public int speed;
 
-	// Use this for initialization
-	void Start () {
+    private Animator animator;
+
+    // Use this for initialization
+    void Start () {
 		this.currentCheckpoint = 0;
-	}
+        animator = GetComponent<Animator>();
+        animator.SetBool("Move", true);
+    }
 	
 	// Update is called once per frame
 	void Update () {
