@@ -84,6 +84,7 @@ public class PlayerStats {
         Health = 500;
         Strength = 100;
 		Defence = 100;
+		obAccuracy=obHealth=obDefense=obStrength=0;
     }
 
     public void deleteInstance() {
