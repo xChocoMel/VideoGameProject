@@ -2,7 +2,6 @@
 using System.Collections;
 using System;
 
-[Serializable]
 public class PlayerStats {
 
     private static PlayerStats instance = null;

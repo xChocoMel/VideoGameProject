@@ -7,6 +7,8 @@ public class PauseMenu : MonoBehaviour {
 	public string levelToLoad;
 	private PlayerStats playerStats;
 
+	private int nextLevel;
+
 	void Start() {
 		playerStats = PlayerStats.getInstance();
 	}

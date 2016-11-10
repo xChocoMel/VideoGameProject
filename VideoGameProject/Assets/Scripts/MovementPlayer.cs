@@ -8,7 +8,8 @@ public class MovementPlayer : MonoBehaviour {
     private PlayerStats playerStats;
 
     public float speed;
-    public float rotateSpeed;
+	public float rotateSpeed;
+
 
 	public static bool sceneSwitched;
 
@@ -94,8 +95,8 @@ public class MovementPlayer : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		switch (other.gameObject.tag)
 		{
-		case "Coin":
-			other.gameObject.SetActive (false);
+		case "Finish":
+			//SceneManager.LoadScene (levelToLoad);
 			break;
 		case "Health":
 			other.gameObject.SetActive (false);
