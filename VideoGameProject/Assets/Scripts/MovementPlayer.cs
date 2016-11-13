@@ -100,26 +100,19 @@ public class MovementPlayer : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		switch (other.gameObject.tag)
 		{
-		    case "Coin":
-			    other.gameObject.SetActive (false);
-			    break;
 		    case "Health":
-			    other.gameObject.SetActive (false);
                 audioSource.PlayOneShot(collectableClip);
                 playerStats.ObHealth += 1;
 			    break;
 		    case "Power":
-			    other.gameObject.SetActive (false);
                 audioSource.PlayOneShot(collectableClip);
                 playerStats.ObStrength += 1;
 			    break;
 		    case "Accuracy":
-			    other.gameObject.SetActive (false);
                 audioSource.PlayOneShot(collectableClip);
                 playerStats.ObAccuracy += 1;
 			    break;
 		    case "Defense":
-			    other.gameObject.SetActive (false);
                 audioSource.PlayOneShot(collectableClip);
                 playerStats.ObDefense += 1;
 			    break;
