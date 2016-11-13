@@ -4,13 +4,14 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
 	public Transform canvas; 
-	public string levelToLoad;
+	private string levelToLoad;
 	private PlayerStats playerStats;
 
 	private int nextLevel;
 
 	void Start() {
 		playerStats = PlayerStats.getInstance();
+		levelToLoad = SceneManager.GetActiveScene ().name;
 	}
 
 	// Update is called once per frame

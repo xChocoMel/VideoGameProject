@@ -27,6 +27,8 @@ public class MovementPlayer : MonoBehaviour {
         playerAnimator = GetComponent<Animator>();
         audioSource = GetComponentInChildren<AudioSource>();
 
+		playerStats.Level = SceneManager.GetActiveScene().name;
+
         objectText = GameObject.Find("ObjectText").GetComponent<Text>();
 		objectText.text =  
 			"Accuracy: " + playerStats.ObAccuracy +

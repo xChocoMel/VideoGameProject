@@ -7,19 +7,29 @@ public class PlayerStats {
     private static PlayerStats instance = null;
 
     private Vector3 position;
-	private int health;
-	private int strength;
-    protected int defence;
+	private int health,
+				strength,
+				defence;
+
     protected bool defending;
+	public String level;
 
 	// Collectables
-	private int obAccuracy, obHealth, obDefense, obStrength;
+	private int obAccuracy, 
+				obHealth, 
+				obDefense, 
+				obStrength;
 
     private static Enemy encounteredEnemy;
 
     public Vector3 Position {
         get { return position; }
         set { position = value; }
+	}
+
+	public String Level{
+		get { return level; }
+		set { level = value; }
 	}
 
     public int Health {
