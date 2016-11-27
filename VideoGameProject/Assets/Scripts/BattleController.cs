@@ -349,7 +349,7 @@ public class BattleController : MonoBehaviour {
 
         yield return new WaitForSeconds(2.0f);
 		//public load scene for testing purpose
-		SceneManager.LoadScene(sceneName1);
+		SceneManager.LoadScene(Destroyer.sceneName);
 
     }
 }

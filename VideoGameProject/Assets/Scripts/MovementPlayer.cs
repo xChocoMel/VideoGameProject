@@ -74,6 +74,7 @@ public class MovementPlayer : MonoBehaviour {
             Debug.Log("ENEMY COLLISON");
 
             playerStats.EncounteredEnemy = c.gameObject.GetComponent<Enemy>();
+			Destroyer.enemiesDefeated.Add (c.gameObject.name);
             Destroy(c.gameObject);
             PlayerSwitchingScene();
             SceneManager.LoadScene("BattleScene");
@@ -102,12 +103,12 @@ public class MovementPlayer : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		switch (other.gameObject.tag)
 		{
-		    case "Health":
-                audioSource.PlayOneShot(collectableClip);
-                playerStats.ObHealth += 1;
-			    break;
+		case "Health":
+			audioSource.PlayOneShot (collectableClip);
+			playerStats.ObHealth += 1;
+			break;
 		    case "Power":
-                audioSource.PlayOneShot(collectableClip);
+            	audioSource.PlayOneShot(collectableClip);
                 playerStats.ObStrength += 1;
 			    break;
 		    case "Accuracy":
@@ -122,6 +123,7 @@ public class MovementPlayer : MonoBehaviour {
 			    break;
 		}
 
+		Destroyer.objectsCollected.Add (other.gameObject.name);
 		handleObjects ();
 		other.gameObject.SetActive (false);
 		Debug.Log(playerStats.ObStrength + " " + playerStats.ObHealth + " " + playerStats.ObDefense + " " + playerStats.ObAccuracy);
