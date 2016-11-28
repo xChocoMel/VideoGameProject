@@ -11,6 +11,7 @@ public class MovementPlayer : MonoBehaviour {
     public float speed;
 	public float rotateSpeed;
 
+
 	public static bool sceneSwitched;
 
     private GameObject[] numCoin;
@@ -78,16 +79,6 @@ public class MovementPlayer : MonoBehaviour {
             PlayerSwitchingScene();
             SceneManager.LoadScene("BattleScene");
         }
-		if (c.gameObject.name.Equals("Goal")) {
-			Destroyer.enemiesDefeated.Clear ();
-			Destroyer.objectsCollected.Clear ();
-			if (Destroyer.sceneName.Equals("Level01")) {
-				SceneManager.LoadScene ("Level02");
-			}
-			else if (Destroyer.sceneName.Equals("Level02")) {
-				SceneManager.LoadScene ("MainMenu");
-			}
-		}
 	}
 
 	void PlayerSwitchingScene () {
