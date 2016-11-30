@@ -7,7 +7,7 @@ public class EnemyStrong : Enemy {
 
     void Awake() {
         Health = 500;
-        Strength = 150;
+        Strength = 100;
         Defence = 200;
         Defending = false;
     }

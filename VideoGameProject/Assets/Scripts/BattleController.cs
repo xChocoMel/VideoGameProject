@@ -280,6 +280,7 @@ public class BattleController : MonoBehaviour {
         if (player.ObStrength > 0) {
             txtPlayerTurn.text = "Strength rasised to " + player.Strength;
             player.ObStrength -= 1;
+			player.Strength += 100;
             SwitchTurns();
         } else {
             txtPlayerTurn.text = "No Strength objects left";
@@ -342,6 +343,7 @@ public class BattleController : MonoBehaviour {
 		objectPanel.gameObject.SetActive (false);
 
 		player.Defence = 100;
+		player.Strength = 100;
 
         player.Health = player.Health;
         enemy.Health = enemy.Health;
@@ -350,6 +352,5 @@ public class BattleController : MonoBehaviour {
         yield return new WaitForSeconds(2.0f);
 		//public load scene for testing purpose
 		SceneManager.LoadScene(Destroyer.sceneName);
-
     }
 }
