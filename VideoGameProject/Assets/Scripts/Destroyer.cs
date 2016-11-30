@@ -51,7 +51,7 @@ public class Destroyer: MonoBehaviour
     }
 
 	void OnLevelWasLoaded(int level) {
-		if (level == 1) {
+		if (level == 3) {
 			foreach (string collected in objectsCollected) {
 				GameObject toDestroy = GameObject.Find (collected);
 				if (toDestroy != null) {
@@ -65,7 +65,7 @@ public class Destroyer: MonoBehaviour
 				}
 			}
 		} 
-		else if (level == 2) {
+		else if (level == 4) {
 			foreach (string collected in objectsCollected) {
 				GameObject toDestroy = GameObject.Find (collected);
 				if (toDestroy != null) {
